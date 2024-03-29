@@ -50,8 +50,74 @@ create table reservas(
 -- Procedimiento a implementar para realizar la reserva
 create or replace procedure reservar_evento( arg_NIF_cliente varchar,
  arg_nombre_evento varchar, arg_fecha date) is
- begin
-  null;
+ 
+ --Definimos variables locales para estudiar se se pueden hacer las reservas
+    v_cliente integer;
+    v_evento integer;
+    v_saldo integer;
+    v_asientos integer;
+    v_fecha date;
+    v_id_evento integer;
+    v_id_abono integer;
+    
+ begin 
+    -- Comprobamos que el cliente existe
+    select count(*) into v_cliente from clientes where NIF = arg_NIF_cliente;
+   
+    if v_cliente = 0 then
+        raise_application_error(-20002, 'Cliente inexistente');
+    end if;
+    
+    -- Comprobamos que el evento existe
+    select count(*) into v_evento from eventos where nombre_evento = arg_nombre_evento;
+    
+    if v_evento = 0 then
+        raise_application_error(-20003, 'El evento ' || arg_nombre_evento || ' no existe');
+    end if;
+    
+    -- Comprobamos que el evento no haya pasado
+    
+    
+    -- Comprobamos que el cliente disponga de saldo suficiente
+    select saldo into v_saldo from abonos where cliente = arg_NIF_cliente;
+    
+    if v_saldo <= 0 then
+        raise_application_error(-20004, 'Saldo en abono insuficiente');
+    end if;
+    
+    -- Comprobar que el evento tiene asientos disponibles
+    select asientos_disponibles into v_asientos from eventos where nombre_evento = arg_nombre_evento;
+    
+    if v_asientos <= 0 then 
+        raise_application_error(-20005, 'No hay asientos libres para el evento' || arg_nombre_evento || '.');
+    end if;
+    
+    -- Comprobar que la fecha de los eventos es correcta
+    select fecha into v_fecha from eventos where nombre_evento = arg_nombre_evento;
+    
+    if v_fecha != arg_fecha then
+        raise_application_error(-20006, 'La fecha de reserva del evento ' || arg_nombre_evento || ' es incorrecta');
+    end if;
+    
+    
+    -- Obtenemos los valores de id de evento y de abono
+    select id_evento into v_id_evento from eventos where nombre_evento = arg_nombre_evento and fecha = arg_fecha;
+    select id_abono into v_id_abono from abonos where cliente =  arg_NIF_cliente;
+    
+    -- Realizamos la reserva
+    insert into reservas
+    values (seq_reservas.nextval, arg_NIF_cliente, v_id_evento, v_id_abono, arg_fecha);
+    
+    -- Descontamos en una unidad el número de plazas disponibles del evento
+    update eventos
+    set asientos_disponibles = asientos_disponibles - 1
+    where nombre_evento = arg_nombre_evento;
+    
+    -- Decrementamos en una unidad el saldo del abono del cliente correspondiente
+    update abonos
+    set saldo = saldo - 1
+    where cliente = arg_NIF_cliente;
+  
 end;
 /
 
@@ -157,3 +223,17 @@ end;
 
 set serveroutput on;
 exec test_reserva_evento;
+
+-- Llamamos al procedimiento reservar_evento
+begin
+    reservar_evento('12345678A', 'concierto_la_moda', date '2023-6-27');
+end;
+/
+
+
+
+-- Utilizamos selects para ver los resultados de las reservas en las tablas
+select * from clientes; 
+select * from abonos;
+select * from eventos;
+select * from reservas;
