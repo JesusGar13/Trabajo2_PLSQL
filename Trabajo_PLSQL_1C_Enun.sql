@@ -224,12 +224,35 @@ end;
 set serveroutput on;
 exec test_reserva_evento;
 
--- Llamamos al procedimiento reservar_evento
+-- Llamamos al procedimiento reservar_evento para hacer un par de reservas
 begin
     reservar_evento('12345678A', 'concierto_la_moda', date '2023-6-27');
 end;
 /
 
+begin
+    reservar_evento('12345678A', 'teatro_impro', date '2023-7-1');
+end;
+/
+
+-- Hacemos nuevas reservas para comprobar el funcionamiento de las excepciones
+-- Cliente inexistente
+begin
+    reservar_evento('12345678B', 'concierto_la_moda', date '2023-6-27');
+end;
+/
+
+-- Evento inexistente
+begin
+    reservar_evento('12345678A', 'concierto_las_modas', date '2023-6-27');
+end;
+/
+
+-- Cliente sin saldo del abono suficiente
+begin
+    reservar_evento('11111111B', 'concierto_la_moda', date '2023-6-27');
+end;
+/
 
 
 -- Utilizamos selects para ver los resultados de las reservas en las tablas
