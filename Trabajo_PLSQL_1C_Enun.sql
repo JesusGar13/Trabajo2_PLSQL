@@ -132,8 +132,17 @@ end;
 
 -- Este procedimiento se utiliza principalmente en entornos de prueba o reinicio de bases de datos para garantizar que las secuencias comiencen desde un valor específico.
 
--- * P4.2
---
+-- P4.2: ¿Qué hace el procedimiento almacenado "inicializa_test"?
+
+-- El procedimiento almacenado "inicializa_test" se encarga de preparar el entorno de pruebas para la funcionalidad de reserva de eventos. Realiza las siguientes acciones:
+-- 1. Reinicia las secuencias de abonos, eventos y reservas utilizando el procedimiento "reset_seq".
+-- 2. Elimina todos los registros de las tablas de reservas, eventos, abonos y clientes.
+-- 3. Inserta datos de prueba en la tabla de clientes.
+-- 4. Inserta datos de prueba en la tabla de abonos.
+-- 5. Inserta datos de prueba en la tabla de eventos.
+
+-- Este procedimiento asegura un entorno de prueba limpio y preconfigurado para probar la funcionalidad de reserva de eventos.
+
 -- * P4.3
 --
 -- * P4.4
