@@ -1,11 +1,22 @@
-drop table clientes cascade constraints;
-drop table abonos   cascade constraints;
-drop table eventos  cascade constraints;
-drop table reservas	cascade constraints;
+BEGIN
+    -- Drop de las tablas solo si existen
+    FOR table_rec IN (SELECT table_name FROM user_tables WHERE table_name IN ('CLIENTES', 'ABONOS', 'EVENTOS', 'RESERVAS')) LOOP
+        EXECUTE IMMEDIATE 'DROP TABLE ' || table_rec.table_name || ' CASCADE CONSTRAINTS';
+        DBMS_OUTPUT.PUT_LINE('Tabla ' || table_rec.table_name || ' borrada correctamente. ');
+    END LOOP;
 
-drop sequence seq_abonos;
-drop sequence seq_eventos;
-drop sequence seq_reservas;
+    -- Drop de las secuencias solo si existen	
+    FOR sequence_rec IN (SELECT sequence_name FROM user_sequences WHERE sequence_name IN ('SEQ_ABONOS', 'SEQ_EVENTOS', 'SEQ_RESERVAS')) LOOP
+        EXECUTE IMMEDIATE 'DROP SEQUENCE ' || sequence_rec.sequence_name;
+        DBMS_OUTPUT.PUT_LINE('Secuencia ' || sequence_rec.sequence_name || ' borrada correctamente.');
+    END LOOP;
+EXCEPTION
+    WHEN OTHERS THEN
+        IF SQLCODE != -942 THEN -- Si el error no es "table or view does not exist"
+            RAISE;
+        END IF;
+END;
+/
 
 
 -- Creación de tablas y secuencias
