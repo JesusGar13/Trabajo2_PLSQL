@@ -122,8 +122,16 @@ end;
 /
 
 ------ Deja aquí tus respuestas a las preguntas del enunciado:
--- * P4.1
---
+-- P4.1: ¿Qué hace el procedimiento almacenado "reset_seq"?
+
+-- El procedimiento almacenado "reset_seq" se utiliza para reiniciar una secuencia en la base de datos. Toma como entrada el nombre de la secuencia y realiza los siguientes pasos:
+-- 1. Obtiene el próximo valor de la secuencia.
+-- 2. Altera la secuencia para que su incremento sea negativo, decrementando así el valor de la secuencia en el número de valores que ya había generado.
+-- 3. Obtiene nuevamente el próximo valor de la secuencia, lo cual provoca que la secuencia se ajuste al nuevo valor decrementado.
+-- 4. Restaura el incremento de la secuencia a su valor original (positivo).
+
+-- Este procedimiento se utiliza principalmente en entornos de prueba o reinicio de bases de datos para garantizar que las secuencias comiencen desde un valor específico.
+
 -- * P4.2
 --
 -- * P4.3
