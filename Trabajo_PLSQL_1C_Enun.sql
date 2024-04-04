@@ -61,46 +61,45 @@ create or replace procedure reservar_evento( arg_NIF_cliente varchar,
     v_id_abono integer;
     
  begin 
-    -- Comprobamos que el cliente existe
+    -- Verificamos la existencia del cliente
     select count(*) into v_cliente from clientes where NIF = arg_NIF_cliente;
    
     if v_cliente = 0 then
-        raise_application_error(-20002, 'Cliente inexistente');
+        raise_application_error(-20002, 'Error: Cliente inexistente');
     end if;
     
-    -- Comprobamos que el evento existe
+    -- Verificamos la existencia del evento
     select count(*) into v_evento from eventos where nombre_evento = arg_nombre_evento;
     
     if v_evento = 0 then
-        raise_application_error(-20003, 'El evento ' || arg_nombre_evento || ' no existe');
+        raise_application_error(-20003, 'Error: El evento ' || arg_nombre_evento || ' no existe');
     end if;
     
     -- Comprobamos que el evento no haya pasado
     
-    
-    -- Comprobamos que el cliente disponga de saldo suficiente
+    -- Verificamos que el cliente tenga saldo suficiente en su abono
     select saldo into v_saldo from abonos where cliente = arg_NIF_cliente;
     
     if v_saldo <= 0 then
-        raise_application_error(-20004, 'Saldo en abono insuficiente');
+        raise_application_error(-20004, 'Error: Saldo en abono insuficiente');
     end if;
     
-    -- Comprobar que el evento tiene asientos disponibles
+    -- Verificamos que el evento tenga asientos disponibles
     select asientos_disponibles into v_asientos from eventos where nombre_evento = arg_nombre_evento;
     
     if v_asientos <= 0 then 
-        raise_application_error(-20005, 'No hay asientos libres para el evento' || arg_nombre_evento || '.');
+        raise_application_error(-20005, 'Error: No hay asientos libres para el evento' || arg_nombre_evento || '.');
     end if;
     
-    -- Comprobar que la fecha de los eventos es correcta
+    -- Comprobamos que la fecha del evento sea correcta
     select fecha into v_fecha from eventos where nombre_evento = arg_nombre_evento;
     
-    if v_fecha != arg_fecha then
-        raise_application_error(-20006, 'La fecha de reserva del evento ' || arg_nombre_evento || ' es incorrecta');
+    if v_fecha <> arg_fecha then
+        raise_application_error(-20006, 'Error: La fecha de reserva del evento ' || arg_nombre_evento || ' es incorrecta');
     end if;
     
     
-    -- Obtenemos los valores de id de evento y de abono
+    -- Obtenemos los valores de ID de evento y de abono
     select id_evento into v_id_evento from eventos where nombre_evento = arg_nombre_evento and fecha = arg_fecha;
     select id_abono into v_id_abono from abonos where cliente =  arg_NIF_cliente;
     
@@ -108,12 +107,12 @@ create or replace procedure reservar_evento( arg_NIF_cliente varchar,
     insert into reservas
     values (seq_reservas.nextval, arg_NIF_cliente, v_id_evento, v_id_abono, arg_fecha);
     
-    -- Descontamos en una unidad el número de plazas disponibles del evento
+    -- Disminuimos en una unidad el número de plazas disponibles del evento
     update eventos
     set asientos_disponibles = asientos_disponibles - 1
     where nombre_evento = arg_nombre_evento;
     
-    -- Decrementamos en una unidad el saldo del abono del cliente correspondiente
+    -- Disminuimos en una unidad el saldo del abono del cliente correspondiente
     update abonos
     set saldo = saldo - 1
     where cliente = arg_NIF_cliente;
