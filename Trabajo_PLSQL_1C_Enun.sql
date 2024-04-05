@@ -87,7 +87,10 @@ create or replace procedure reservar_evento( arg_NIF_cliente varchar,
     end if;
     
     -- Comprobamos que el evento no haya pasado
-    
+    if arg_fecha < sysdate then
+        raise_application_error(-20001, 'No se pueden reservar eventos pasados.');
+    end if;
+
     -- Verificamos que el cliente tenga saldo suficiente en su abono
     select saldo into v_saldo from abonos where cliente = arg_NIF_cliente;
     
