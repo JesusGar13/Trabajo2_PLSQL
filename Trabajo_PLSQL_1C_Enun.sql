@@ -233,6 +233,11 @@ begin
   --caso 2 Evento pasado
   begin
     inicializa_test;
+    realizar_reserva('12345678A', 'teatro_impro', date '2024-7-1');
+    dbms_output.put_line('Caso 2: Reserva no realizada, evento pasado');
+    exception
+    when others then
+        dbms_output.put_line('Caso 2: Falla la reserva');
   end;
   
   --caso 3 Evento inexistente
