@@ -222,6 +222,11 @@ begin
   --caso 1 Reserva correcta, se realiza
   begin
     inicializa_test;
+    realizar_reserva('12345678A', 'concierto_la_moda', date '2023-6-27');
+    dbms_output.put_line('Caso 1: Reserva realizada correctamente');
+    exception
+    when others then
+        dbms_output.put_line('Caso 1: Falla la reserva');
   end;
   
   
