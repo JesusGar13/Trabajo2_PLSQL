@@ -1,3 +1,5 @@
+-- Enlace del repositorio: https://github.com/JesusGar13/Trabajo2_PLSQL
+
 BEGIN
     -- Drop de las tablas solo si existen
     FOR table_rec IN (SELECT table_name FROM user_tables WHERE table_name IN ('CLIENTES', 'ABONOS', 'EVENTOS', 'RESERVAS')) LOOP
