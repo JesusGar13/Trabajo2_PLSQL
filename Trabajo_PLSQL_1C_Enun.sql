@@ -333,20 +333,20 @@ begin
   begin
     inicializa_test;
     reservar_evento('12345678Z', 'concierto_la_moda', date '2023-6-27');
-    dbms_output.put_line('Caso 4: Reserva no realizada, cliente inexistente');
+    dbms_output.put_line('Caso 4: Fallo el test');
   exception
-    when others then
-        dbms_output.put_line('Caso 4: Falla la reserva');
+    when ex then -20002
+        dbms_output.put_line('Caso 4: Caso probado correctamente');
   end;
 
 -- Caso 5: El cliente no tiene saldo suficiente
 begin
     inicializa_test;
     reservar_evento('11111111B', 'concierto_la_moda', date '2023-6-27');
-    dbms_output.put_line('Caso 5: Reserva no realizada, saldo insuficiente');
+    dbms_output.put_line('Caso 5: Fallo el test');
 exception
-    when others then
-        dbms_output.put_line('Caso 5: Falla la reserva');
+    when ex then -20004
+        dbms_output.put_line('Caso 5: Caso probado correctamente');
 end;
 
   
