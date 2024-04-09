@@ -159,9 +159,12 @@ end;
 -- Este procedimiento asegura un entorno de prueba limpio y preconfigurado para probar la funcionalidad de reserva de eventos.
 
 -- * P4.3
--- La estrategia de programación que hemos llevado a cabo es el control de concurrencia y manejo de excepciones.
--- Lo que hacemos con esta estrategia es verificar la existencia y disponibilidad de recursos antes de realizar determinadas acciones. 
--- Así manejamos las posibles excepciones que puedan darse a la durante el proceso de reservas.
+-- Estrategia de control de concurrencia y manejo de excepciones
+-- En nuestro sistema de gestión de reservas, hemos implementado una estrategia de programación que se centra en el control de concurrencia y el manejo de excepciones para garantizar la integridad y la fiabilidad de nuestras operaciones.
+-- Esta estrategia implica verificar la disponibilidad de recursos y manejar cualquier excepción que pueda surgir durante el proceso de reservas. Aquí está cómo lo llevamos a cabo:
+-- 1. Utilizamos bloqueos de base de datos para controlar el acceso concurrente a recursos críticos, como registros de reservas o eventos. Esto ayuda a prevenir situaciones de competencia que podrían resultar en inconsistencias o errores en los datos.
+-- 2. Implementamos manejo de excepciones en nuestros procedimientos almacenados y scripts SQL. Esto nos permite capturar y manejar errores de manera efectiva, asegurando que nuestras transacciones se ejecuten de manera consistente incluso cuando se producen condiciones inesperadas.
+-- En resumen, nuestra estrategia de programación basada en el control de concurrencia y el manejo de excepciones nos permite mantener la integridad de los datos y garantizar una experiencia sin problemas para nuestros usuarios durante el proceso de reservas.
 	
 -- * P4.4
 -- En el código esto se puede ver en los selects que se llevan a cabo para comprobar el estado de las tablas de la base de datos. 
