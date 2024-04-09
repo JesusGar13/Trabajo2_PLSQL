@@ -162,7 +162,10 @@ end;
 -- Así manejamos las posibles excepciones que puedan darse a la durante el proceso de reservas.
 	
 -- * P4.4
---
+-- En el código esto se puede ver en los selects que se llevan a cabo para comprobar el estado de las tablas de la base de datos. 
+-- Además se realizan comprobaciones medias durante la ejecución del código, con los cuales podemos hacer un seguimiento de las acciones
+-- que se están llevando a cabo.
+	
 -- * P4.5
 -- Para abordar el problema de la concurrencia y que la reserva de los eventos sea consistente usamos excepciones 
 -- para manejar los datos que se toman para la reserva.
