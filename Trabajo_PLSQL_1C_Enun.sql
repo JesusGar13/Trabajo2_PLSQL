@@ -305,7 +305,7 @@ begin
   --caso 1 Reserva correcta, se realiza
   begin
     inicializa_test;
-    reservar_evento('12345678A', 'concierto_la_moda', date '2023-6-27');
+    reservar_evento('12345678A', 'concierto_la_moda', date '2024-6-27');
     dbms_output.put_line('Caso 1: Reserva realizada correctamente');
     exception
     when others then
@@ -359,31 +359,31 @@ exec test_reserva_evento;
 
 -- Llamamos al procedimiento reservar_evento para hacer un par de reservas
 begin
-    reservar_evento('12345678A', 'concierto_la_moda', date '2023-6-27');
+    reservar_evento('12345678A', 'concierto_la_moda', date '2024-6-27');
 end;
 /
 
 begin
-    reservar_evento('12345678A', 'teatro_impro', date '2023-7-1');
+    reservar_evento('12345678A', 'teatro_impro', date '2024-7-1');
 end;
 /
 
 -- Hacemos nuevas reservas para comprobar el funcionamiento de las excepciones
 -- Cliente inexistente
 begin
-    reservar_evento('12345678B', 'concierto_la_moda', date '2023-6-27');
+    reservar_evento('12345678B', 'concierto_la_moda', date '2024-6-27');
 end;
 /
 
 -- Evento inexistente
 begin
-    reservar_evento('12345678A', 'concierto_las_modas', date '2023-6-27');
+    reservar_evento('12345678A', 'concierto_las_modas', date '2024-6-27');
 end;
 /
 
 -- Cliente sin saldo del abono suficiente
 begin
-    reservar_evento('11111111B', 'concierto_la_moda', date '2023-6-27');
+    reservar_evento('11111111B', 'concierto_la_moda', date '2024-6-27');
 end;
 /
 
