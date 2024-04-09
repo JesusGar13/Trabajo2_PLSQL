@@ -166,10 +166,13 @@ end;
 -- 2. Implementamos manejo de excepciones en nuestros procedimientos almacenados y scripts SQL. Esto nos permite capturar y manejar errores de manera efectiva, asegurando que nuestras transacciones se ejecuten de manera consistente incluso cuando se producen condiciones inesperadas.
 -- En resumen, nuestra estrategia de programación basada en el control de concurrencia y el manejo de excepciones nos permite mantener la integridad de los datos y garantizar una experiencia sin problemas para nuestros usuarios durante el proceso de reservas.
 	
--- * P4.4
--- En el código esto se puede ver en los selects que se llevan a cabo para comprobar el estado de las tablas de la base de datos. 
--- Además se realizan comprobaciones medias durante la ejecución del código, con los cuales podemos hacer un seguimiento de las acciones
--- que se están llevando a cabo.
+
+--P4.4 - Utilización de select y comprobaciones durante la ejecución del código
+-- En nuestro código SQL, la estrategia de control de concurrencia y manejo de excepciones se refleja principalmente en los select que realizamos para verificar el estado de las tablas de la base de datos.
+-- Estos select nos permiten asegurarnos de que los recursos necesarios para las operaciones de reserva estén disponibles y en el estado adecuado antes de proceder con cualquier acción.
+-- Además de los select, también llevamos a cabo comprobaciones intermedias durante la ejecución del código. Estas comprobaciones nos permiten hacer un seguimiento detallado de las acciones que se están llevando a cabo y tomar decisiones en tiempo real para manejar situaciones imprevistas o excepcionales que puedan surgir.
+-- En resumen, utilizamos select y comprobaciones durante la ejecución del código para garantizar la integridad y la fiabilidad de nuestras operaciones de reserva, así como para proporcionar un seguimiento detallado de las acciones realizadas.
+
 	
 -- * P4.5
 -- Para abordar el problema de la concurrencia y que la reserva de los eventos sea consistente usamos excepciones 
