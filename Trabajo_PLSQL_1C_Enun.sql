@@ -161,7 +161,90 @@ end;
 -- * P4.4
 --
 -- * P4.5
--- 
+-- Para abordar el problema de la concurrencia y que la reserva de los eventos sea consistente usamos excepciones 
+-- para manejar los datos que se toman para la reserva.
+-- Otra forma de abordar el problema seria con bloqueos de linea durante la ejcucion de las consultas e inserciones.
+-- Para ello añadiremos la clausala "FOR UPDATE" en las consultas que se realizan sobre la tabla de eventos para 
+-- bloquear la fila. Esto evita que otros procesos puedan modificar los datos de la fila mientras se realiza la reserva.
+-- La implementacion sera la siguiente:
+/*
+CREATE OR REPLACE PROCEDURE reservar_evento(
+    arg_NIF_cliente VARCHAR,
+    arg_nombre_evento VARCHAR,
+    arg_fecha DATE
+) IS
+    v_cliente INTEGER;
+    v_evento INTEGER;
+    v_saldo INTEGER;
+    v_asientos INTEGER;
+    v_fecha DATE;
+    v_id_evento INTEGER;
+    v_id_abono INTEGER;
+BEGIN
+    -- Verificamos la existencia del cliente
+    SELECT COUNT(*) INTO v_cliente FROM clientes WHERE NIF = arg_NIF_cliente;
+
+    IF v_cliente = 0 THEN
+        RAISE_APPLICATION_ERROR(-20002, 'Error: Cliente inexistente');
+    END IF;
+
+    -- Verificamos la existencia del evento y bloqueamos la fila para evitar cambios concurrentes
+    SELECT COUNT(*) INTO v_evento
+    FROM eventos
+    WHERE nombre_evento = arg_nombre_evento
+    FOR UPDATE;
+
+    IF v_evento = 0 THEN
+        RAISE_APPLICATION_ERROR(-20003, 'Error: El evento ' || arg_nombre_evento || ' no existe');
+    END IF;
+
+    -- Comprobamos que el evento no haya pasado
+    IF arg_fecha < SYSDATE THEN
+        RAISE_APPLICATION_ERROR(-20001, 'No se pueden reservar eventos pasados.');
+    END IF;
+
+    -- Verificamos que el cliente tenga saldo suficiente en su abono
+    SELECT saldo INTO v_saldo FROM abonos WHERE cliente = arg_NIF_cliente;
+
+    IF v_saldo <= 0 THEN
+        RAISE_APPLICATION_ERROR(-20004, 'Error: Saldo en abono insuficiente');
+    END IF;
+
+    -- Verificamos que el evento tenga asientos disponibles
+    SELECT asientos_disponibles INTO v_asientos FROM eventos WHERE nombre_evento = arg_nombre_evento;
+
+    IF v_asientos <= 0 THEN
+        RAISE_APPLICATION_ERROR(-20005, 'Error: No hay asientos libres para el evento ' || arg_nombre_evento || '.');
+    END IF;
+
+    -- Comprobamos que la fecha del evento sea correcta
+    SELECT fecha INTO v_fecha FROM eventos WHERE nombre_evento = arg_nombre_evento;
+
+    IF v_fecha <> arg_fecha THEN
+        RAISE_APPLICATION_ERROR(-20006, 'Error: La fecha de reserva del evento ' || arg_nombre_evento || ' es incorrecta');
+    END IF;
+
+    -- Obtenemos los valores de ID de evento y de abono
+    SELECT id_evento INTO v_id_evento FROM eventos WHERE nombre_evento = arg_nombre_evento AND fecha = arg_fecha;
+    SELECT id_abono INTO v_id_abono FROM abonos WHERE cliente = arg_NIF_cliente;
+
+    -- Realizamos la reserva
+    INSERT INTO reservas
+    VALUES (seq_reservas.NEXTVAL, arg_NIF_cliente, v_id_evento, v_id_abono, arg_fecha);
+
+    -- Disminuimos en una unidad el número de plazas disponibles del evento
+    UPDATE eventos
+    SET asientos_disponibles = asientos_disponibles - 1
+    WHERE nombre_evento = arg_nombre_evento;
+
+    -- Disminuimos en una unidad el saldo del abono del cliente correspondiente
+    UPDATE abonos
+    SET saldo = saldo - 1
+    WHERE cliente = arg_NIF_cliente;
+END;
+/
+
+*/
 
 
 create or replace
