@@ -341,7 +341,7 @@ begin
     dbms_output.put_line('Caso 4: Fallo el test');
   exception
     when others then
-        dbms_output.put_line('Error -20002: Cliente inexistente');
+        dbms_output.put_line('Caso4 correcto lanza Error -20002: Cliente inexistente');
   end;
 
 -- Caso 5: El cliente no tiene saldo suficiente
@@ -351,7 +351,7 @@ begin
     dbms_output.put_line('Caso 5: Fallo el test');
 exception
     when others then
-        dbms_output.put_line('Error -20004: Saldo insuficiente');
+        dbms_output.put_line('Caso5 correcto lanza Error -20004: Saldo insuficiente');
 end;
 
   
