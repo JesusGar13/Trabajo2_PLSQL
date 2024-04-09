@@ -157,7 +157,10 @@ end;
 -- Este procedimiento asegura un entorno de prueba limpio y preconfigurado para probar la funcionalidad de reserva de eventos.
 
 -- * P4.3
---
+-- La estrategia de programación que hemos llevado a cabo es el control de concurrencia y manejo de excepciones.
+-- Lo que hacemos con esta estrategia es verificar la existencia y disponibilidad de recursos antes de realizar determinadas acciones. 
+-- Así manejamos las posibles excepciones que puedan darse a la durante el proceso de reservas.
+	
 -- * P4.4
 --
 -- * P4.5
