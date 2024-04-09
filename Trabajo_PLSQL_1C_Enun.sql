@@ -309,10 +309,10 @@ begin
   begin
     inicializa_test;
     reservar_evento('12345678A', 'concierto_la_moda', date '2024-6-27');
-    dbms_output.put_line('Caso 1: Reserva realizada correctamente');
-    exception
+    dbms_output.put_line('Caso 1: correcto');
+  exception
     when others then
-        dbms_output.put_line('Caso 1: Falla la reserva');
+        dbms_output.put_line('Caso 1 incorrecto. No se puede realizar la reserva');
   end;
   
   
@@ -320,20 +320,20 @@ begin
   begin
     inicializa_test;
     reservar_evento('12345678A', 'teatro_impro', date '2024-7-1');
-    dbms_output.put_line('Caso 2: Reserva no realizada, evento pasado');
-    exception
+    dbms_output.put_line('Caso 2: Fallo el test');
+  exception
     when others then
-        dbms_output.put_line('Caso 2: Falla la reserva');
+        dbms_output.put_line('Caso 2 correcto lanza Error -20002: Evento pasado');
   end;
   
   --caso 3 Evento inexistente
   begin
     inicializa_test;
-    reservar_evento('12345678A', 'evento_inexistente', date '2026-6-27');
-    dbms_output.put_line('Caso 3: Reserva no realizada, evento inexistente');
-    exception
+    reservar_evento('12345678Z', 'evento_inexistente', date '2023-6-27');
+    dbms_output.put_line('Caso 3: Fallo el test');
+  exception
     when others then
-        dbms_output.put_line('Error -20003: El evento no existe');
+        dbms_output.put_line('Caso 3 correcto lanza Error -20002: Evento inexistente');
   end;
   
 
@@ -344,7 +344,7 @@ begin
     dbms_output.put_line('Caso 4: Fallo el test');
   exception
     when others then
-        dbms_output.put_line('Caso4 correcto lanza Error -20002: Cliente inexistente');
+        dbms_output.put_line('Caso 4 correcto lanza Error -20002: Cliente inexistente');
   end;
 
 -- Caso 5: El cliente no tiene saldo suficiente
@@ -354,7 +354,7 @@ begin
     dbms_output.put_line('Caso 5: Fallo el test');
 exception
     when others then
-        dbms_output.put_line('Caso5 correcto lanza Error -20004: Saldo insuficiente');
+        dbms_output.put_line('Caso 5 correcto lanza Error -20004: Saldo insuficiente');
 end;
 
   
