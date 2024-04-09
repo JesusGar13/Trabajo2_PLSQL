@@ -326,6 +326,11 @@ begin
   --caso 3 Evento inexistente
   begin
     inicializa_test;
+    reservar_evento('12345678A', 'evento_inexistente', date '2026-6-27');
+    dbms_output.put_line('Caso 3: Reserva no realizada, evento inexistente');
+    exception
+    when others then
+        dbms_output.put_line('Error -20003: El evento no existe');
   end;
   
 
